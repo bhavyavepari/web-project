@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cab Booking</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 0; background: #a1d6e2; }
+        .container5 { max-width: 800px; margin: 20px auto; background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); }
+        .back-arrow { text-decoration: none; color: #1995ad; font-size: 18px; display: flex; align-items: center; }
+        .back-arrow img { width: 20px; height: 20px; margin-right: 8px; }
+        h1, h2 { text-align: center; color: #1995ad; }
+        label { font-weight: bold; display: block; margin-top: 10px; }
+        input, button { width: 100%; padding: 10px; margin-top: 5px; border-radius: 5px; border: 1px solid #1995ad; }
+        button { background: #1995ad; color: white; border: none; cursor: pointer; margin-top: 15px; }
+        button:hover { background: #12707f; }
+        #map { height: 400px; margin-top: 20px; border-radius: 5px; }
+        .confirmation { text-align: center; padding: 15px; margin-top: 20px; background: #d4edda; border-radius: 5px; display: none; }
+        .otp-box { background: #1995ad; color: white; font-weight: bold; padding: 10px; text-align: center; border-radius: 5px; margin-top: 10px; display: none; }
+    </style>
+</head>
+<body>
+    <div class="container5">
+        <a href="project_cabs.html" class="back-arrow"><img src="back arrow.png" alt="Back"> Back</a>
+        <h1>SUV Booking</h1>
+        <center><img src="suv.png" alt="sedan" width="300" height="200" ></center>
+        <form id="booking-form">
+            <label>Name:</label><input type="text" id="name" required>
+            <label>Phone:</label><input type="tel" id="phone" required>
+            <label>Pickup Location:</label><input type="text" id="pickup" required>
+            <label>Destination:</label><input type="text" id="destination" required>
+            <label for="date">Date:</label><input type="date" id="date" required>
+            <label>Pickup Time:</label><input type="time" id="time" required>
+            <button type="submit">Book Now</button>
+        </form>
+        <div id="map"></div>
+        <div id="details" class="confirmation"></div>
+        <div id="otp" class="otp-box"></div>
+    </div>
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script>
+        const drivers = [
+            { name: "Abhinav", car: "Suv", phone: "9876543210", location: [28.6139, 77.2090] },
+            { name: "Mike", car: "Suv", phone: "9867543211", location: [28.6353, 77.2250] },
+            { name: "Satish", car: "Suv", phone: "9876543210", location: [28.6539, 77.2090] }
+        ];
+        let map = L.map('map').setView([28.6139, 77.2090], 13);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; OpenStreetMap contributors' }).addTo(map);
+        async function getCoordinates(address) {
+            let response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${address}`);
+            let data = await response.json();
+            return data.length ? [parseFloat(data[0].lat), parseFloat(data[0].lon)] : null;
+        }
+        function findNearestDriver(pickupCoords) {
+            return drivers.reduce((prev, curr) => {
+                let prevDist = Math.hypot(prev.location[0] - pickupCoords[0], prev.location[1] - pickupCoords[1]);
+                let currDist = Math.hypot(curr.location[0] - pickupCoords[0], curr.location[1] - pickupCoords[1]);
+                return currDist < prevDist ? curr : prev;
+            });
+        }
+        function generateOTP() {
+            return Math.floor(1000 + Math.random() * 9000);
+        }
+        document.getElementById('booking-form').addEventListener('submit', async (event) => {
+            event.preventDefault();
+            let pickup = document.getElementById('pickup').value;
+            let destination = document.getElementById('destination').value;
+            let pickupCoords = await getCoordinates(pickup);
+            let destinationCoords = await getCoordinates(destination);
+            if (!pickupCoords || !destinationCoords) { alert("Invalid locations entered."); return; }
+            let driver = findNearestDriver(pickupCoords);
+            let routeUrl = `https://routing.openstreetmap.de/routed-car/route/v1/driving/${pickupCoords[1]},${pickupCoords[0]};${destinationCoords[1]},${destinationCoords[0]}?overview=full&geometries=geojson`;
+            let response = await fetch(routeUrl);
+            let routeData = await response.json();
+            if (routeData.code !== "Ok") { alert("Could not find a route."); return; }
+            let route = routeData.routes[0];
+            let distance = (route.distance / 1000).toFixed(2);
+            let duration = (route.duration / 60).toFixed(2);
+            let fare = (distance * 15).toFixed(2);
+            let otp = generateOTP();
+            document.getElementById('details').style.display = 'block';
+            document.getElementById('details').innerHTML = `<h3>Booking Confirmed</h3>
+                <p><strong>Driver:</strong> ${driver.name}</p>
+                <p><strong>Car:</strong> ${driver.car}</p>
+                <p><strong>Phone:</strong> ${driver.phone}</p>
+                <p><strong>Distance:</strong> ${distance} km</p>
+                <p><strong>Estimated Time:</strong> ${duration} mins</p>
+                <p><strong>Fare:</strong> ₹${fare}</p>`;
+            document.getElementById('otp').style.display = 'block';
+            document.getElementById('otp').innerText = `Your OTP: ${otp}`;
+            let routeLayer = L.geoJSON(route.geometry, { color: 'blue', weight: 5 }).addTo(map);
+            map.fitBounds(routeLayer.getBounds());
+        });
+    </script>
+</body>
+</html>

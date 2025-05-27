@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smart Ride</title>
+  <link rel="icon" type="image/x-icon" href="SR.png">
+  <link rel="stylesheet" href="car_pooling.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  
+</head>
+<body>
+  <div id="splash">
+    <video id="splashVideo" autoplay muted loop>
+      <source src="smart ride.mp4" type="video/mp4">
+      Your browser does not support the video tag.
+    </video>
+  </div>
+    <header>
+        <div class="logo-container">
+          <img src="smart ride.jpg" alt="Logo" class="logo">
+          <h1 class="company-name">Smart Ride</h1>
+        </div>
+      </header>
+  
+  <ul>
+    <li><a class="active" href="http://127.0.0.1:5500/project_cabs.html">Cabs</a></li>
+    <li><a href="http://127.0.0.1:5500/project_carpooling.html">Car Pooling</a></li>
+    <li><a href="http://127.0.0.1:5500/project_contact.html">Contact</a></li>
+    <li><a href="http://127.0.0.1:5500/project_about.html">About us</a></li>
+    
+  </ul>
+  <div class="jumbotron">
+    <div class="containerr">
+        <div class="header">
+            <h1>Safest Ride Ever</h1>
+            <p>Plan your journey with ease and comfort.</p>
+        </div>
+
+        <div class="options">
+            <button class="option-btn active" id="localBtn">Local</button>
+            <button class="option-btn" id="airportBtn">Airport</button>
+            <button class="option-btn" id="rentingBtn">Renting</button>
+        </div>
+
+        <form id="bookingForm" class="form-content">
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="pickupLocation"><i class="fas fa-map-marker-alt"></i> Pickup Location:</label>
+                    <input type="text" id="pickupLocation" placeholder="Enter pickup location" required>
+                </div>
+                <div class="form-group">
+                    <label for="dropoffLocation"><i class="fas fa-map-marker-alt"></i> Dropoff Location:</label>
+                    <input type="text" id="dropoffLocation" placeholder="Enter dropoff location" required>
+                </div>
+                <div class="form-group">
+                    <label for="phoneNumber"><i class="fas fa-phone"></i> Phone Number:</label>
+                    <input type="tel" id="phoneNumber" placeholder="Enter phone number" required>
+                </div>
+                <div class="form-group">
+                    <label for="bookingDate"><i class="fas fa-calendar-alt"></i> Date:</label>
+                    <input type="date" id="bookingDate" required>
+                </div>
+            </div>
+
+            <div class="form-row package-row" id="packageSection" style="display: none;">
+                <label for="package">Select Package:</label>
+                <select id="package">
+                    <option value="4hours">4 Hours / 40 KM</option>
+                    <option value="8hours">8 Hours / 80 KM</option>
+                    <option value="fullDay">Full Day</option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn">Book Now</button>
+        </form>
+
+        <div id="loading" class="loading-spinner" style="display: none;">Loading...</div>
+    </div>
+</div>
+
+<div id="popup" class="popup" style="display: none;">
+    <div class="popup-content">
+        <span class="close-btn" onclick="closePopup()">&times;</span>
+        <div id="output"></div>
+    </div>
+</div>
+
+<div id="otp-box" class="otp-box" style="display: none;"></div>
+  
+
+ 
+  <center>
+    
+  
+  
+  <div class="container3">
+    <br>
+    <b><h1 style="text-align: center; color:#07b8c5;">Types of cars available for Riding</h1></b>
+    <br>
+    <div class="card-container">
+      <div class="card">
+        <a href="sedan.html">
+        <img src="sedan.png" alt="Sedan" class="card-image">
+        <h3>Sedan</h3>
+        <p>Comfortable seating for up to 4 people. Perfect for daily commutes.</p>
+      </a>
+      </div>
+      <div class="card">
+        <a href="suv.html">
+        <img src="suv.png" alt="SUV" class="card-image">
+        <h3>SUV</h3>
+        <p>Spacious and ideal for group travel. Seats up to 6 people.</p>
+      </a>
+      </div>
+      <div class="card">
+        <a href="hatchback.html">
+        <img src="hatchback.png" alt="Hatchback" class="card-image">
+        <h3>Hatchback</h3>
+        <p>Compact and efficient. Ideal for quick and economical rides.</p>
+      </a>
+      </div>
+      <div class="card">
+        <a href="van.html">
+        <img src="van.png" alt="Van" class="card-image">
+        <h3>Van</h3>
+        <p>Great for large groups. Accommodates up to 8 passengers.</p>
+      </a>
+      </div>
+      <div class="card">
+        <a href="alto.html">
+        <img src="alto.png" alt="Alto" class="card-image">
+        <h3>Alto</h3>
+        <p>Compact and efficient. Ideal for quick and economical rides.</p>
+      </a>
+      </div>
+      <div class="card">
+        <a href="dzire.html">
+        <img src="dzire.jpg" alt="Dzire" class="card-image">
+        <h3>Dzire</h3>
+        <p>Spacious and ideal for group travel. Seats up to 5 people.</p>
+      </a>
+      </div>
+    </div>
+  </div>
+  <br>
+  <br>
+  <b><h1>Why Smart Ride?</h1></b>
+  <br>
+  <div class="sudoku-grid-container">
+    <div class="grid-item" style="background-color: #a1d6e2;">
+      <h2>500K+</h2>
+      <p>Rides Completed</p>
+    </div>
+    <div class="grid-item" style="background-color: #91c9d5;">
+      <h2>300K+</h2>
+      <p>Happy Customers</p>
+    </div>
+    <div class="grid-item" style="background-color: #81bcc9;">
+      <h2>100%</h2>
+      <p>Eco-Friendly</p>
+    </div>
+    <div class="grid-item" style="background-color: #71afbc;">
+      <h2>99.9%</h2>
+      <p>Safe Rides</p>
+    </div>
+    <div class="grid-item" style="background-color: #61a2b0;">
+      <h2>5-Star</h2>
+      <p>Best Service</p>
+    </div>
+    <div class="grid-item" style="background-color: #51a2b0;">
+      <h2>10 Years</h2>
+      <p>In Service</p>
+    </div>
+    <div class="grid-item" style="background-color: #41a2b0;">
+      <h2>24/7</h2>
+      <p>Customer Support</p>
+    </div>
+    <div class="grid-item" style="background-color: #31a2b0;">
+      <h2>50+</h2>
+      <p>Cities Covered</p>
+    </div>
+    <div class="grid-item" style="background-color: #21a2b0;">
+      <h2>Top Rated</h2>
+      <p>In Reviews</p>
+    </div>
+    <div class="grid-item" style="background-color: #11a2b0;">
+      <h2>500+</h2>
+      <p>Drivers</p>
+    </div>
+    <div class="grid-item" style="background-color: #01a2b0;">
+      <h2>10M+</h2>
+      <p>Distance Covered (in km)</p>
+    </div>
+    <div class="grid-item" style="background-color: #91d9e2;">
+      <h2>95%</h2>
+      <p>On-Time Rides</p>
+    </div>
+    <div class="grid-item" style="background-color: #81dce2;">
+      <h2>High-Tech</h2>
+      <p>Tracking System</p>
+    </div>
+    <div class="grid-item" style="background-color: #71dfe2;">
+      <h2>Low Fares</h2>
+      <p>Affordable Pricing</p>
+    </div>
+    <div class="grid-item" style="background-color: #61e2e2;">
+      <h2>Global Reach</h2>
+      <p>International Service</p>
+    </div>
+  </div>
+  
+</center>
+<footer class="footer">
+  <div class="footer-content">
+    <p>© 2024 CarpoolConnect | Privacy Policy | Terms of Service</p>
+    
+  </div>
+</footer>
+
+<script src="car_pooling.js" ></script>
+
+</body>
+</html>
